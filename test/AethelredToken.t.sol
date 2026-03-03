@@ -591,7 +591,7 @@ contract AethelredTokenTest is Test {
 
     function test_Constants() public view {
         assertEq(token.TOTAL_SUPPLY_CAP(), TOTAL_SUPPLY_CAP);
-        assertEq(token.UAETH_TO_WEI_SCALE(), 1e12);
+        assertEq(token.UAETHEL_TO_WEI_SCALE(), 1e12);
         assertEq(token.MAX_BATCH_BLACKLIST_SIZE(), 200);
     }
 

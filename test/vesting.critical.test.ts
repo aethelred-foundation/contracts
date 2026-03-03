@@ -6,7 +6,7 @@ async function deployVestingFixture() {
   const [admin, beneficiary] = await ethers.getSigners();
 
   const TokenFactory = await ethers.getContractFactory("MockMintableBurnableERC20");
-  const token = await TokenFactory.deploy("Aethelred", "AETH", 18);
+  const token = await TokenFactory.deploy("Aethelred", "AETHEL", 18);
   await token.waitForDeployment();
 
   const VestingFactory = await ethers.getContractFactory("AethelredVesting");

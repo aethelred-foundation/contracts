@@ -68,12 +68,12 @@ contract AethelredToken is
 
     /// @notice Total supply cap (10 billion tokens)
     /// @dev Cross-layer denomination — Audit fix [C-02]:
-    ///      Solidity uses 18-decimal wei. Go/Cosmos L1 uses 6-decimal uaeth.
-    ///      Bridging: Solidity wei = uaeth * UAETH_TO_WEI_SCALE
+    ///      Solidity uses 18-decimal wei. Go/Cosmos L1 uses 6-decimal uaethel.
+    ///      Bridging: Solidity wei = uaethel * UAETHEL_TO_WEI_SCALE
     uint256 public constant TOTAL_SUPPLY_CAP = 10_000_000_000 * 1e18;
 
-    /// @notice Scaling factor from Go uaeth (6 dec) to EVM wei (18 dec). Audit fix [C-02].
-    uint256 public constant UAETH_TO_WEI_SCALE = 1e12;
+    /// @notice Scaling factor from Go uaethel (6 dec) to EVM wei (18 dec). Audit fix [C-02].
+    uint256 public constant UAETHEL_TO_WEI_SCALE = 1e12;
 
     /// @notice Decimals (standard 18)
     uint8 private constant DECIMALS = 18;

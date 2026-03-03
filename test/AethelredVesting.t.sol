@@ -11,7 +11,7 @@ import "../contracts/AethelredVesting.sol";
  * @dev Simple ERC20 for vesting tests
  */
 contract MockVestingToken is ERC20 {
-    constructor() ERC20("Aethelred", "AETH") {
+    constructor() ERC20("Aethelred", "AETHEL") {
         _mint(msg.sender, 10_000_000_000 * 1e18);
     }
 }
@@ -316,7 +316,7 @@ contract AethelredVestingTest is Test {
         vm.warp(block.timestamp + 365 days / 2);
 
         uint256 vested = vesting.getVested(id);
-        assertApproxEqAbs(vested, 500 ether, 1e15); // ~500 AETH +/- rounding
+        assertApproxEqAbs(vested, 500 ether, 1e15); // ~500 AETHEL +/- rounding
     }
 
     function test_Vested_LinearFullyVested() public {
@@ -423,7 +423,7 @@ contract AethelredVestingTest is Test {
         vm.prank(vestingAdmin);
         vesting.executeTGE();
 
-        // At TGE: 5% = 500 AETH
+        // At TGE: 5% = 500 AETHEL
         uint256 tgeVested = vesting.getVested(id);
         assertEq(tgeVested, 10000 ether * 500 / BPS_BASE);
 
@@ -1362,7 +1362,7 @@ contract AethelredVestingTest is Test {
         // Step 1: At TGE, 5% available
         vm.prank(alice);
         uint256 r1 = vesting.release(id);
-        assertEq(r1, 10000 ether * 500 / BPS_BASE); // 500 AETH
+        assertEq(r1, 10000 ether * 500 / BPS_BASE); // 500 AETHEL
 
         // Step 2: Before cliff, nothing more
         vm.warp(tgeTs + 90 days);

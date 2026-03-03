@@ -21,7 +21,7 @@
 |---|---|---|
 | `AethelredBridge.sol` | Lock-and-mint ETH ↔ AETHEL bridge (UUPS, guardian multi-sig) | TBD |
 | `SealVerifier.sol` | On-chain Digital Seal verification | TBD |
-| `AETHToken.sol` | Wrapped AETHEL ERC-20 (18 decimals) | TBD |
+| `AETHELToken.sol` | Wrapped AETHEL ERC-20 (18 decimals) | TBD |
 
 ---
 
