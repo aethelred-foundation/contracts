@@ -1,0 +1,1 @@
+[{"inputs":[{"internalType":"bytes32","name":"sealId","type":"bytes32"},{"internalType":"bytes32","name":"modelHash","type":"bytes32"},{"internalType":"bytes32","name":"outputCommitment","type":"bytes32"}],"name":"onSealVerified","outputs":[],"stateMutability":"nonpayable","type":"function"}]

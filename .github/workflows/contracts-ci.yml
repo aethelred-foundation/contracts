@@ -1,0 +1,79 @@
+name: Contracts CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["contracts/**", "hardhat.config.ts"]
+  pull_request:
+    branches: [main]
+    paths: ["contracts/**", "hardhat.config.ts"]
+
+jobs:
+  hardhat:
+    name: Hardhat Compile & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive # for foundry lib/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+      - run: npm ci
+      - run: npx hardhat compile
+      - run: npx hardhat test
+      - name: Gas Report
+        run: REPORT_GAS=true npx hardhat test
+        continue-on-error: true
+
+  foundry:
+    name: Foundry Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge build
+        working-directory: contracts
+      - run: forge test -vvv
+        working-directory: contracts
+      - run: forge coverage --report lcov
+        working-directory: contracts
+        continue-on-error: true
+
+  slither:
+    name: Slither Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+        working-directory: contracts
+      - uses: crytic/slither-action@v0.4.0
+        with:
+          target: contracts/contracts/
+          slither-config: contracts/slither.config.json
+          fail-on: high
+
+  solidity-lint:
+    name: Solhint Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+        working-directory: contracts
+      - run: npx solhint 'contracts/**/*.sol'
+        working-directory: contracts

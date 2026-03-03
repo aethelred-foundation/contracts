@@ -1,0 +1,7 @@
+{
+  "filter_paths": "test,node_modules,artifacts,cache",
+  "exclude": [
+    "naming-convention",
+    "solc-version"
+  ]
+}

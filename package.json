@@ -1,0 +1,65 @@
+{
+  "name": "@aethelred/bridge-contracts",
+  "version": "1.0.0",
+  "description": "Aethelred Bridge Ethereum Smart Contracts - Enterprise Lock-and-Mint Bridge",
+  "license": "Apache-2.0",
+  "author": "Aethelred Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aethelred/bridge-contracts"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "ALLOW_UNLIMITED_CONTRACT_SIZE=true hardhat test",
+    "test:coverage": "ALLOW_UNLIMITED_CONTRACT_SIZE=true hardhat coverage",
+    "test:gas": "ALLOW_UNLIMITED_CONTRACT_SIZE=true REPORT_GAS=true hardhat test",
+    "deploy:devnet": "hardhat run scripts/deploy.ts --network devnet",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network mainnet",
+    "verify:sepolia": "hardhat run scripts/verify.ts --network sepolia",
+    "verify:mainnet": "hardhat run scripts/verify.ts --network mainnet",
+    "upgrade:devnet": "hardhat run scripts/upgrade.ts --network devnet",
+    "upgrade:sepolia": "hardhat run scripts/upgrade.ts --network sepolia",
+    "upgrade:mainnet": "hardhat run scripts/upgrade.ts --network mainnet",
+    "lint": "solhint 'contracts/**/*.sol'",
+    "lint:fix": "solhint 'contracts/**/*.sol' --fix",
+    "format": "prettier --write 'contracts/**/*.sol' 'scripts/**/*.ts' 'test/**/*.ts'",
+    "clean": "hardhat clean",
+    "size": "hardhat size-contracts",
+    "size:check": "hardhat compile && node scripts/check-contract-size.js",
+    "slither": "slither . --config-file slither.config.json",
+    "mythril": "myth analyze contracts/AethelredBridge.sol --solc-json mythril.config.json",
+    "docgen": "hardhat docgen"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.0",
+    "chai": "^4.3.10",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.9.0",
+    "hardhat": "^2.19.0",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-docgen": "^1.3.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "prettier": "^3.1.0",
+    "prettier-plugin-solidity": "^1.3.1",
+    "solhint": "^4.0.0",
+    "solidity-coverage": "^0.8.5",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
