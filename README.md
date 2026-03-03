@@ -1,16 +1,16 @@
 <h1 align="center">Aethelred Contracts</h1>
 
 <p align="center">
-  <strong>Production Solidity smart contracts for the Aethelred ecosystem</strong><br/>
-  Ethereum Bridge · Seal Verifier · Oracle · Governance
+ <strong>Production Solidity smart contracts for the Aethelred ecosystem</strong><br/>
+ Ethereum Bridge · Seal Verifier · Oracle · Governance
 </p>
 
 <p align="center">
-  <a href="https://github.com/AethelredFoundation/contracts/actions/workflows/contracts-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred/contracts/contracts-ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="License"></a>
-  <a href="https://docs.aethelred.io/contracts"><img src="https://img.shields.io/badge/docs-contracts-orange?style=flat-square" alt="Docs"></a>
-  <img src="https://img.shields.io/badge/audit-in_progress-yellow?style=flat-square" alt="Audit">
-  <img src="https://img.shields.io/badge/solidity-^0.8.20-purple?style=flat-square" alt="Solidity">
+ <a href="https://github.com/AethelredFoundation/contracts/actions/workflows/contracts-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred/contracts/contracts-ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
+ <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="License"></a>
+ <a href="https://docs.aethelred.io/contracts"><img src="https://img.shields.io/badge/docs-contracts-orange?style=flat-square" alt="Docs"></a>
+ <img src="https://img.shields.io/badge/audit-in_progress-yellow?style=flat-square" alt="Audit">
+ <img src="https://img.shields.io/badge/solidity-^0.8.20-purple?style=flat-square" alt="Solidity">
 </p>
 
 ---
@@ -34,7 +34,7 @@
 - **OFAC screening**: `blockedAddresses` mapping with on-chain enforcement
 - **Audited by**: [Audit status pending]
 
-> ⚠️ Found a vulnerability? See [SECURITY.md](SECURITY.md) — do NOT open a public issue.
+> IMPORTANT: Found a vulnerability? See [SECURITY.md](SECURITY.md) — do NOT open a public issue.
 
 ---
 
