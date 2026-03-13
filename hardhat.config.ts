@@ -44,7 +44,7 @@ function getAccounts(networkName: string): string[] {
   ) {
     return [ANVIL_DEFAULT_KEY];
   }
-  // Non-local networks: return empty array — deployment will fail with a clear error
+  // Non-local networks: return empty array - deployment will fail with a clear error
   return [];
 }
 

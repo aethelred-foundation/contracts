@@ -22,7 +22,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
  *      - complianceBurn with SlashEvent audit trail
  *      - UUPS Upgradeable
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-28)
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-28)
  *
  * Token Specification:
  * ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -67,7 +67,7 @@ contract AethelredToken is
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     /// @notice Total supply cap (10 billion tokens)
-    /// @dev Cross-layer denomination — Audit fix [C-02]:
+    /// @dev Cross-layer denomination - Audit fix [C-02]:
     ///      Solidity uses 18-decimal wei. Go/Cosmos L1 uses 6-decimal uaethel.
     ///      Bridging: Solidity wei = uaethel * UAETHEL_TO_WEI_SCALE
     uint256 public constant TOTAL_SUPPLY_CAP = 10_000_000_000 * 1e18;
@@ -306,7 +306,7 @@ contract AethelredToken is
     }
 
     /**
-     * @notice Legacy administrative burn — DEPRECATED. Audit fix [M-01].
+     * @notice Legacy administrative burn - DEPRECATED. Audit fix [M-01].
      * @dev Use complianceBurn() instead, which requires a reason code and emits
      *      a ComplianceSlash event for full audit trail. This function is retained
      *      only for backward compatibility and will be removed in a future version.
@@ -530,7 +530,7 @@ contract AethelredToken is
     }
 
     // =========================================================================
-    // VERSION — Audit fix [I-05]
+    // VERSION - Audit fix [I-05]
     // =========================================================================
 
     /// @notice Contract implementation version for upgrade tracking.

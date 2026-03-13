@@ -1,3 +1,7 @@
+> Repo role: smart-contracts
+> Monorepo source path: `contracts/` in `AethelredFoundation/aethelred`
+> Canonical public source of truth: `AethelredFoundation/aethelred`
+
 <h1 align="center">Aethelred Contracts</h1>
 
 <p align="center">
@@ -34,7 +38,7 @@
 - **OFAC screening**: `blockedAddresses` mapping with on-chain enforcement
 - **Audited by**: [Audit status pending]
 
-> IMPORTANT: Found a vulnerability? See [SECURITY.md](SECURITY.md) — do NOT open a public issue.
+> IMPORTANT: Found a vulnerability? See [SECURITY.md](SECURITY.md) - do NOT open a public issue.
 
 ---
 

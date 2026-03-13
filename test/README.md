@@ -76,7 +76,7 @@ curl -L https://foundry.paradigm.xyz | bash
 foundryup
 
 # Install dependencies
-cd contracts/ethereum
+cd contracts
 forge install OpenZeppelin/openzeppelin-contracts
 forge install OpenZeppelin/openzeppelin-contracts-upgradeable
 forge install foundry-rs/forge-std
@@ -176,7 +176,7 @@ slither . --config-file slither.config.json
 ### Mythril Analysis
 
 ```bash
-myth analyze contracts/ethereum/AethelredBridge.sol
+myth analyze contracts/contracts/AethelredBridge.sol
 ```
 
 ## Test Accounts

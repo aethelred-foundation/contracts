@@ -21,9 +21,9 @@ interface ITimelockDelaySource {
  *      EIP-712 typed data for withdrawal proposals, 2-of-N guardian multi-sig
  *      for emergency withdrawals, and per-block mint ceiling defense-in-depth.
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-28)
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-28)
  *
- * Cross-Contract Dependencies — Audit note [I-06]:
+ * Cross-Contract Dependencies - Audit note [I-06]:
  *   AethelredBridge → AethelredToken (bridgeMint/bridgeBurn via authorizedBridges)
  *   AethelredBridge → SovereignGovernanceTimelock (UPGRADER_ROLE via initializeWithTimelock)
  *   AethelredBridge → SovereignCircuitBreakerModule (optional: external anomaly check)
@@ -475,7 +475,7 @@ contract AethelredBridge is
 
     /// @dev Audit: Rate limit uses block.timestamp which validators can manipulate
     /// by ~12 seconds. This is acceptable since RATE_LIMIT_PERIOD is 1 hour (3600s),
-    /// making the manipulation window < 0.33% of a period — negligible for rate limiting.
+    /// making the manipulation window < 0.33% of a period - negligible for rate limiting.
     modifier withinRateLimit(uint256 amount, bool isDeposit) {
         if (rateLimitConfig.enabled) {
             uint256 currentPeriod = block.timestamp / RATE_LIMIT_PERIOD;
@@ -667,7 +667,7 @@ contract AethelredBridge is
         if (!supportedTokens[token]) revert TokenNotSupported();
         _validateDeposit(aethelredRecipient, amount);
 
-        // Transfer tokens to bridge — measure actual received for fee-on-transfer tokens
+        // Transfer tokens to bridge - measure actual received for fee-on-transfer tokens
         uint256 balanceBefore = IERC20(token).balanceOf(address(this));
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
         uint256 actualReceived = IERC20(token).balanceOf(address(this)) - balanceBefore;
@@ -873,7 +873,7 @@ contract AethelredBridge is
         if (proposal.challenged) revert WithdrawalAlreadyChallenged();
         // Audit: Use the snapshot threshold (locked at proposal creation) to prevent
         // threshold manipulation via relayer churn. Also enforce the current threshold
-        // as a floor — the stricter of the two applies.
+        // as a floor - the stricter of the two applies.
         uint256 effectiveThreshold = proposal.requiredVotesSnapshot;
         if (relayerConfig.minVotesRequired > effectiveThreshold) {
             effectiveThreshold = relayerConfig.minVotesRequired;
@@ -1367,7 +1367,7 @@ contract AethelredBridge is
     /**
      * @dev Syncs relayerConfig.relayerCount and minVotesRequired after a grant/revoke.
      *
-     * Audit note — relayer churn and in-flight proposals:
+     * Audit note - relayer churn and in-flight proposals:
      *   In-flight proposals use a requiredVotesSnapshot captured at proposal creation
      *   time. processWithdrawal enforces the STRICTER of (snapshot, current threshold),
      *   so:
@@ -1430,7 +1430,7 @@ contract AethelredBridge is
         override
         onlyRole(UPGRADER_ROLE)
     {
-        // Intentionally empty — the onlyRole modifier is the sole gate.
+        // Intentionally empty - the onlyRole modifier is the sole gate.
         // No additional validation on newImplementation is needed because the
         // UUPS proxy pattern verifies the new implementation has _authorizeUpgrade.
     }
@@ -1524,7 +1524,7 @@ contract AethelredBridge is
     }
 
     // =========================================================================
-    // VERSION — Audit fix [I-05]
+    // VERSION - Audit fix [I-05]
     // =========================================================================
 
     /// @notice Contract implementation version for upgrade tracking.

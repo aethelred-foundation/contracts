@@ -21,7 +21,7 @@ import {AethelredTypes} from "../types/AethelredTypes.sol";
  *        2. Attested to by ⅔ + 1 of the Aethelred validator set.
  *        3. Anchored in an immutable Digital Seal on the Aethelred L1.
  *
- * Example — DeFi credit scoring:
+ * Example - DeFi credit scoring:
  * ```solidity
  * IAethelredOracle oracle = IAethelredOracle(ORACLE_ADDR);
  * (bytes memory result, bool valid) = oracle.getResult(jobId);

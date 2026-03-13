@@ -658,7 +658,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — C-03: burnTxHash Replay Protection
+    // AUDIT REGRESSION - C-03: burnTxHash Replay Protection
     // =========================================================================
 
     function test_C03_BurnTxHashReplayProtection_SameHashRejected() public {
@@ -739,7 +739,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — M-03: clearExpiredRateLimitState
+    // AUDIT REGRESSION - M-03: clearExpiredRateLimitState
     // =========================================================================
 
     function test_M03_ClearExpiredRateLimitState_Success() public {
@@ -819,7 +819,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — I-05: Version Getter
+    // AUDIT REGRESSION - I-05: Version Getter
     // =========================================================================
 
     function test_I05_VersionReturnsExpected() public view {
@@ -834,7 +834,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — L-02: MIN_ETH_CONFIRMATIONS = 64
+    // AUDIT REGRESSION - L-02: MIN_ETH_CONFIRMATIONS = 64
     // =========================================================================
 
     function test_L02_MinEthConfirmationsIs64() public view {
@@ -842,7 +842,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // ADDITIONAL SECURITY — Withdrawal replay & double-process
+    // ADDITIONAL SECURITY - Withdrawal replay & double-process
     // =========================================================================
 
     function test_Security_CannotProcessWithdrawalTwice() public {
@@ -919,7 +919,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // ADDITIONAL — ERC20 withdrawal flow
+    // ADDITIONAL - ERC20 withdrawal flow
     // =========================================================================
 
     function test_ProcessWithdrawal_ERC20() public {
@@ -1202,11 +1202,11 @@ contract AethelredBridgeTest is Test {
         vm.prank(relayer2);
         bridge.voteWithdrawal(proposalId);
 
-        // Relayer3 votes (vote 3 — exactly at threshold)
+        // Relayer3 votes (vote 3 - exactly at threshold)
         vm.prank(relayer3);
         bridge.voteWithdrawal(proposalId);
 
-        // Wait and process — should succeed with exactly 3 votes
+        // Wait and process - should succeed with exactly 3 votes
         vm.warp(block.timestamp + 7 days + 1);
         uint256 user2BalanceBefore = user2.balance;
         bridge.processWithdrawal(proposalId);
@@ -1732,7 +1732,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — UPGRADER_ROLE Isolation
+    // AUDIT REGRESSION - UPGRADER_ROLE Isolation
     // =========================================================================
 
     function test_Audit_UpgraderRoleAdminIsItself() public view {
@@ -1753,7 +1753,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Sanctions on processWithdrawal Recipient
+    // AUDIT REGRESSION - Sanctions on processWithdrawal Recipient
     // =========================================================================
 
     function test_Audit_ProcessWithdrawal_BlocksBlockedRecipient() public {
@@ -1783,7 +1783,7 @@ contract AethelredBridgeTest is Test {
         vm.expectRevert(AethelredBridge.AddressBlocked.selector);
         bridge.processWithdrawal(proposalId);
 
-        // Unblock user2 — processing should now succeed
+        // Unblock user2 - processing should now succeed
         vm.prank(guardian);
         bridge.setAddressBlocked(user2, false);
 
@@ -1793,7 +1793,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Emergency Withdrawal Amount Cap
+    // AUDIT REGRESSION - Emergency Withdrawal Amount Cap
     // =========================================================================
 
     function test_Audit_EmergencyWithdrawal_AmountCap() public {
@@ -1812,7 +1812,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Emergency Withdrawal Accounting
+    // AUDIT REGRESSION - Emergency Withdrawal Accounting
     // =========================================================================
 
     function test_Audit_EmergencyWithdrawal_UpdatesTotalLocked() public {
@@ -1829,7 +1829,7 @@ contract AethelredBridgeTest is Test {
         vm.prank(admin);
         bridge.approveEmergencyWithdrawal(operationId);
 
-        // Need a second guardian — grant guardian role and approve
+        // Need a second guardian - grant guardian role and approve
         vm.prank(admin);
         bridge.grantRole(bridge.GUARDIAN_ROLE(), guardian);
         vm.prank(guardian);
@@ -1849,7 +1849,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Emergency Withdrawal Sanctions
+    // AUDIT REGRESSION - Emergency Withdrawal Sanctions
     // =========================================================================
 
     function test_Audit_EmergencyWithdrawal_BlocksBlockedRecipient() public {
@@ -1896,7 +1896,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Vote Threshold Snapshot
+    // AUDIT REGRESSION - Vote Threshold Snapshot
     // =========================================================================
 
     function test_Audit_VoteThresholdSnapshot_RecordedAtProposal() public {
@@ -1930,7 +1930,7 @@ contract AethelredBridgeTest is Test {
         vm.prank(relayer2);
         bridge.voteWithdrawal(proposalId);
 
-        // Remove 2 relayers — this drops minVotesRequired to ~2
+        // Remove 2 relayers - this drops minVotesRequired to ~2
         vm.prank(admin);
         bridge.revokeRole(bridge.RELAYER_ROLE(), relayer4);
         vm.prank(admin);
@@ -1947,7 +1947,7 @@ contract AethelredBridgeTest is Test {
         vm.expectRevert(AethelredBridge.InsufficientVotes.selector);
         bridge.processWithdrawal(proposalId);
 
-        // Add the third vote — now it should pass (3 >= max(3, 2))
+        // Add the third vote - now it should pass (3 >= max(3, 2))
         vm.prank(relayer3);
         bridge.voteWithdrawal(proposalId);
 
@@ -1957,7 +1957,7 @@ contract AethelredBridgeTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — canProcessWithdrawal shows blocked recipient
+    // AUDIT REGRESSION - canProcessWithdrawal shows blocked recipient
     // =========================================================================
 
     function test_Audit_CanProcessWithdrawal_ShowsBlockedRecipient() public {
