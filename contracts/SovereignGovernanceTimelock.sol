@@ -30,7 +30,7 @@ interface IInstitutionalBridgeGovernance {
  * - 7-day minimum delay
  * - Dual proposal consent (Issuer signature + Foundation signature)
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-28)
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-28)
  */
 contract SovereignGovernanceTimelock is TimelockController {
     using MessageHashUtils for bytes32;
@@ -264,7 +264,7 @@ contract SovereignGovernanceTimelock is TimelockController {
     }
 
     // =========================================================================
-    // STORAGE GAP — Audit fix [H-05]
+    // STORAGE GAP - Audit fix [H-05]
     // =========================================================================
 
     /// @dev Reserved storage slots for future upgrades.

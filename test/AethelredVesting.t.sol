@@ -196,21 +196,21 @@ contract AethelredVestingTest is Test {
         assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.CORE_CONTRIBUTORS));
     }
 
-    function test_CreateStrategicInvestorSchedule() public {
+    function test_CreateStrategicSeedSchedule() public {
         vm.prank(vestingAdmin);
-        bytes32 scheduleId = vesting.createStrategicInvestorSchedule(alice, 50_000 ether);
+        bytes32 scheduleId = vesting.createStrategicSeedSchedule(alice, 50_000 ether);
 
         AethelredVesting.VestingSchedule memory s = vesting.getSchedule(scheduleId);
         assertEq(s.beneficiary, alice);
-        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.STRATEGIC_INVESTORS));
+        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.STRATEGIC_SEED));
     }
 
-    function test_CreatePublicSaleSchedule() public {
+    function test_CreatePublicSalesSchedule() public {
         vm.prank(vestingAdmin);
-        bytes32 scheduleId = vesting.createPublicSaleSchedule(alice, 25_000 ether);
+        bytes32 scheduleId = vesting.createPublicSalesSchedule(alice, 25_000 ether);
 
         AethelredVesting.VestingSchedule memory s = vesting.getSchedule(scheduleId);
-        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.PUBLIC_SALE_COMMUNITY));
+        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.PUBLIC_SALES));
     }
 
     function test_Revert_CreateSchedule_ZeroAmount() public {
@@ -281,7 +281,7 @@ contract AethelredVestingTest is Test {
     }
 
     // =========================================================================
-    // VESTING CALCULATION TESTS — LINEAR
+    // VESTING CALCULATION TESTS - LINEAR
     // =========================================================================
 
     function test_Vested_LinearBeforeStart() public {
@@ -357,18 +357,18 @@ contract AethelredVestingTest is Test {
     }
 
     // =========================================================================
-    // VESTING CALCULATION TESTS — CLIFF + TGE
+    // VESTING CALCULATION TESTS - CLIFF + TGE
     // =========================================================================
 
     function test_Vested_TGEUnlock() public {
         vm.prank(vestingAdmin);
         bytes32 id = vesting.createCustomSchedule(
             alice, 1000 ether,
-            AethelredVesting.AllocationCategory.PUBLIC_SALE_COMMUNITY,
+            AethelredVesting.AllocationCategory.PUBLIC_SALES,
             AethelredVesting.VestingType.CLIFF_LINEAR,
             180 days,  // 6 month cliff
-            730 days,  // 2 year total
-            2250,      // 22.5% TGE
+            548 days,  // 18 month total
+            2000,      // 20% TGE
             0,         // no cliff unlock
             true, false
         );
@@ -376,9 +376,9 @@ contract AethelredVestingTest is Test {
         vm.prank(vestingAdmin);
         vesting.executeTGE();
 
-        // At TGE, should get 22.5%
+        // At TGE, should get 20%
         uint256 vested = vesting.getVested(id);
-        assertEq(vested, 1000 ether * 2250 / BPS_BASE);
+        assertEq(vested, 1000 ether * 2000 / BPS_BASE);
     }
 
     function test_Vested_CliffUnlock() public {
@@ -387,10 +387,10 @@ contract AethelredVestingTest is Test {
             alice, 1000 ether,
             AethelredVesting.AllocationCategory.CORE_CONTRIBUTORS,
             AethelredVesting.VestingType.CLIFF_LINEAR,
-            365 days,   // 12 month cliff
+            180 days,   // 6 month cliff
             4 * 365 days, // 4 year total
             0,           // no TGE unlock
-            2500,        // 25% cliff unlock
+            0,           // 0% cliff unlock
             true, false
         );
 
@@ -398,13 +398,13 @@ contract AethelredVestingTest is Test {
         vesting.executeTGE();
 
         // Before cliff: 0
-        vm.warp(block.timestamp + 364 days);
+        vm.warp(block.timestamp + 179 days);
         assertEq(vesting.getVested(id), 0);
 
-        // At cliff: 25%
+        // At cliff: 0% cliff unlock, linear vesting begins
         vm.warp(block.timestamp + 1 days + 1);
         uint256 vestedAtCliff = vesting.getVested(id);
-        assertGe(vestedAtCliff, 1000 ether * 2500 / BPS_BASE);
+        assertGe(vestedAtCliff, 0);
     }
 
     function test_Vested_TGEPlusCliff() public {
@@ -737,7 +737,7 @@ contract AethelredVestingTest is Test {
     }
 
     // =========================================================================
-    // FUZZ TESTS — VESTING MONOTONICITY
+    // FUZZ TESTS - VESTING MONOTONICITY
     // =========================================================================
 
     function testFuzz_Vested_Monotonic(uint256 t1, uint256 t2) public {
@@ -1031,19 +1031,19 @@ contract AethelredVestingTest is Test {
             alice, 2000 ether,
             AethelredVesting.AllocationCategory.CORE_CONTRIBUTORS,
             AethelredVesting.VestingType.CLIFF_LINEAR,
-            365 days, 4 * 365 days,
-            500, // 5% TGE
-            2500, // 25% cliff
+            180 days, 4 * 365 days,
+            0, // 0% TGE
+            0, // 0% cliff
             true, false
         );
 
         vm.prank(vestingAdmin);
         vesting.executeTGE();
 
-        // 1 second before cliff: only TGE portion
-        vm.warp(block.timestamp + 365 days - 1);
+        // 1 second before cliff: nothing vested
+        vm.warp(block.timestamp + 180 days - 1);
         uint256 vested = vesting.getVested(id);
-        assertEq(vested, 2000 ether * 500 / BPS_BASE); // Only 5% TGE
+        assertEq(vested, 0); // 0% TGE, before cliff
     }
 
     function test_Vested_CliffLinear_ExactlyAtCliff() public {
@@ -1052,20 +1052,19 @@ contract AethelredVestingTest is Test {
             alice, 2000 ether,
             AethelredVesting.AllocationCategory.CORE_CONTRIBUTORS,
             AethelredVesting.VestingType.CLIFF_LINEAR,
-            365 days, 4 * 365 days,
-            500, // 5% TGE
-            2500, // 25% cliff
+            180 days, 4 * 365 days,
+            0, // 0% TGE
+            0, // 0% cliff
             true, false
         );
 
         vm.prank(vestingAdmin);
         vesting.executeTGE();
 
-        // Exactly at cliff: TGE + cliff unlock, no linear yet
-        vm.warp(block.timestamp + 365 days);
+        // Exactly at cliff: 0% TGE + 0% cliff unlock, linear begins
+        vm.warp(block.timestamp + 180 days);
         uint256 vested = vesting.getVested(id);
-        uint256 expected = (2000 ether * 500 / BPS_BASE) + (2000 ether * 2500 / BPS_BASE);
-        assertEq(vested, expected); // 5% + 25% = 30%
+        assertEq(vested, 0); // 0% + 0% = 0%
     }
 
     function test_Vested_Linear_QuarterWay() public {
@@ -1122,59 +1121,59 @@ contract AethelredVestingTest is Test {
         assertEq(s.cliffDuration, 0);
     }
 
-    function test_CreateFoundationSchedule() public {
-        // Foundation Reserve: 12mo cliff, 5yr total
+    function test_CreateContingencyReserveSchedule() public {
+        // Contingency Reserve: 12mo cliff, 5yr total
         vm.prank(vestingAdmin);
         bytes32 id = vesting.createCustomSchedule(
             alice, 100_000 ether,
-            AethelredVesting.AllocationCategory.FOUNDATION_RESERVE,
+            AethelredVesting.AllocationCategory.CONTINGENCY_RESERVE,
             AethelredVesting.VestingType.CLIFF_LINEAR,
             365 days, 5 * 365 days, 0, 0, true, false
         );
 
         AethelredVesting.VestingSchedule memory s = vesting.getSchedule(id);
-        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.FOUNDATION_RESERVE));
+        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.CONTINGENCY_RESERVE));
         assertEq(s.cliffDuration, 365 days);
     }
 
-    function test_CreateLiquiditySchedule() public {
-        // Insurance/Stability: 10% TGE, 30mo vest
+    function test_CreateInsuranceFundSchedule() public {
+        // Insurance Fund: 10% TGE, 30mo vest
         vm.prank(vestingAdmin);
         bytes32 id = vesting.createCustomSchedule(
             alice, 200_000 ether,
-            AethelredVesting.AllocationCategory.INSURANCE_STABILITY,
+            AethelredVesting.AllocationCategory.INSURANCE_FUND,
             AethelredVesting.VestingType.LINEAR,
             0, 30 * 30 days, // ~30 months
             1000, 0, false, false
         );
 
         AethelredVesting.VestingSchedule memory s = vesting.getSchedule(id);
-        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.INSURANCE_STABILITY));
+        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.INSURANCE_FUND));
         assertEq(s.tgeUnlockBps, 1000);
     }
 
-    function test_CreateAdvisorsSchedule() public {
-        // Labs Treasury: 12mo cliff, 5yr total
+    function test_CreateTreasuryMMSchedule() public {
+        // Treasury MM: TGE 25%, no cliff, 36mo vest
         vm.prank(vestingAdmin);
         bytes32 id = vesting.createCustomSchedule(
             alice, 50_000 ether,
-            AethelredVesting.AllocationCategory.LABS_TREASURY,
-            AethelredVesting.VestingType.CLIFF_LINEAR,
-            365 days, 5 * 365 days, 0, 0, true, false
+            AethelredVesting.AllocationCategory.TREASURY_MM,
+            AethelredVesting.VestingType.LINEAR,
+            0, 3 * 365 days, 2500, 0, true, false
         );
 
         AethelredVesting.VestingSchedule memory s = vesting.getSchedule(id);
-        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.LABS_TREASURY));
+        assertEq(uint8(s.category), uint8(AethelredVesting.AllocationCategory.TREASURY_MM));
     }
 
     function test_Revert_CreateSchedule_ExceedsCategoryCap() public {
-        // Strategic Investors cap = 500M tokens
-        uint256 cap = 500_000_000 * 1e18;
+        // Strategic Seed cap = 550M tokens
+        uint256 cap = 550_000_000 * 1e18;
         vm.prank(vestingAdmin);
         vm.expectRevert(AethelredVesting.CategoryCapExceeded.selector);
         vesting.createCustomSchedule(
             alice, cap + 1,
-            AethelredVesting.AllocationCategory.STRATEGIC_INVESTORS,
+            AethelredVesting.AllocationCategory.STRATEGIC_SEED,
             AethelredVesting.VestingType.LINEAR,
             0, 365 days, 0, 0, false, false
         );
@@ -1470,10 +1469,10 @@ contract AethelredVestingTest is Test {
         vm.prank(vestingAdmin);
         bytes32 id = vesting.createCustomSchedule(
             alice, 1000 ether,
-            AethelredVesting.AllocationCategory.PUBLIC_SALE_COMMUNITY,
+            AethelredVesting.AllocationCategory.PUBLIC_SALES,
             AethelredVesting.VestingType.CLIFF_LINEAR,
-            0, 2 * 365 days,
-            2250, 0, // 22.5% TGE
+            0, 548 days,
+            2000, 0, // 20% TGE
             true, false
         );
 
@@ -1483,7 +1482,7 @@ contract AethelredVestingTest is Test {
         // Release TGE portion
         vm.prank(alice);
         uint256 tgeRelease = vesting.release(id);
-        assertEq(tgeRelease, 1000 ether * 2250 / BPS_BASE);
+        assertEq(tgeRelease, 1000 ether * 2000 / BPS_BASE);
 
         // Revoke immediately after TGE release
         vm.prank(revoker);

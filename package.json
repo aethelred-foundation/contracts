@@ -6,7 +6,7 @@
   "author": "Aethelred Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aethelred/bridge-contracts"
+    "url": "https://github.com/AethelredFoundation/contracts.git"
   },
   "scripts": {
     "compile": "hardhat compile",

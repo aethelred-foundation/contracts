@@ -16,15 +16,16 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
  * @dev Implements multiple vesting schedules with milestone dual-attestation,
  *      cliff+linear unlock, DAO-controlled release, and category-based caps.
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-28)
- *      - Compute/PoUW Rewards (30%): 10-year linear, no cliff
- *      - Core Contributors (20%): 12mo cliff, 25% at cliff, 4yr total
- *      - Ecosystem & Grants (15%): 5% TGE, 6mo cliff, 5yr total
- *      - Labs Treasury (10%): 12mo cliff, 5yr total
- *      - Public Sale (10%): 22.5% TGE, no cliff, 2yr total
- *      - Strategic Investors (5%): 12mo cliff, 4yr total
- *      - Insurance/Stability (5%): 10% TGE, 30mo linear
- *      - Foundation Reserve (5%): 12mo cliff, 5yr total
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-28)
+ *      - PoUW Rewards (30%): 10yr linear, no cliff
+ *      - Core Contributors (20%): 6mo cliff, 42mo linear, no TGE
+ *      - Ecosystem & Grants (15%): 2% TGE, 6mo cliff, 48mo linear
+ *      - Strategic/Seed (5.5%): 12mo cliff, 24mo linear, no TGE
+ *      - Public Sales (7.5%): 20% TGE, no cliff, 18mo linear
+ *      - Airdrop/Seals (7%): 25% TGE, no cliff, 12mo linear
+ *      - Treasury & MM (6%): 25% TGE, no cliff, 36mo linear
+ *      - Insurance Fund (5%): 10% TGE, no cliff, 30mo linear
+ *      - Contingency Reserve (4%): 12mo cliff, vesting TBD
  *
  * Architecture:
  * ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -90,16 +91,17 @@ contract AethelredVesting is
         MILESTONE         // Released at specific milestones
     }
 
-    /// @notice Allocation categories matching tokenomics (10B total supply)
+    /// @notice Allocation categories matching tokenomics (10B total supply, 9 categories)
     enum AllocationCategory {
-        COMPUTE_POUW_REWARDS,   // 30% (3B)  - 10yr linear, no cliff
-        CORE_CONTRIBUTORS,      // 20% (2B)  - 12mo cliff, 25% at cliff, 4yr total
-        ECOSYSTEM_GRANTS,       // 15% (1.5B) - 5% TGE, 6mo cliff, 5yr total
-        LABS_TREASURY,          // 10% (1B)  - 12mo cliff, 5yr total
-        PUBLIC_SALE_COMMUNITY,  // 10% (1B)  - 22.5% TGE, no cliff, 2yr vest
-        STRATEGIC_INVESTORS,    // 5%  (500M) - 12mo cliff, 4yr total
-        INSURANCE_STABILITY,    // 5%  (500M) - 10% TGE, no cliff, 30mo vest
-        FOUNDATION_RESERVE      // 5%  (500M) - 12mo cliff, 5yr total
+        COMPUTE_POUW_REWARDS,   // 30%  (3B)   - 10yr linear, no cliff
+        CORE_CONTRIBUTORS,      // 20%  (2B)   - 6mo cliff, 42mo linear, no TGE
+        ECOSYSTEM_GRANTS,       // 15%  (1.5B) - 2% TGE, 6mo cliff, 48mo linear
+        STRATEGIC_SEED,         // 5.5% (550M) - 12mo cliff, 24mo linear, no TGE
+        PUBLIC_SALES,           // 7.5% (750M) - 20% TGE, no cliff, 18mo linear
+        AIRDROP_SEALS,          // 7%   (700M) - 25% TGE, no cliff, 12mo linear
+        TREASURY_MM,            // 6%   (600M) - 25% TGE, no cliff, 36mo linear
+        INSURANCE_FUND,         // 5%   (500M) - 10% TGE, no cliff, 30mo linear
+        CONTINGENCY_RESERVE     // 4%   (400M) - 12mo cliff, vesting TBD
     }
 
     // =========================================================================
@@ -128,9 +130,8 @@ contract AethelredVesting is
         uint256 vestingDuration;
         /// @notice TGE unlock percentage (basis points)
         uint256 tgeUnlockBps;
-        /// @notice Cliff unlock percentage (basis points) — Audit fix [H-01]
+        /// @notice Cliff unlock percentage (basis points) - Audit fix [H-01]
         /// @dev Additional percentage released at cliff, separate from TGE unlock.
-        ///      For core contributors: tgeUnlockBps=0, cliffUnlockBps=2500 (25% at cliff).
         ///      Matches Go VestingSchedule.CliffPercent field.
         uint256 cliffUnlockBps;
         /// @notice Whether schedule is revocable
@@ -336,16 +337,17 @@ contract AethelredVesting is
         _grantRole(REVOKER_ROLE, _admin);
         _grantRole(UPGRADER_ROLE, _admin);
 
-        // Set category caps from tokenomics (10B total supply)
+        // Set category caps from tokenomics (10B total supply, 9 categories)
         // Using 18 decimals: amount * 10^18
         categoryCaps[AllocationCategory.COMPUTE_POUW_REWARDS] = 3_000_000_000 * 1e18;  // 30%
         categoryCaps[AllocationCategory.CORE_CONTRIBUTORS] = 2_000_000_000 * 1e18;     // 20%
         categoryCaps[AllocationCategory.ECOSYSTEM_GRANTS] = 1_500_000_000 * 1e18;      // 15%
-        categoryCaps[AllocationCategory.LABS_TREASURY] = 1_000_000_000 * 1e18;          // 10%
-        categoryCaps[AllocationCategory.PUBLIC_SALE_COMMUNITY] = 1_000_000_000 * 1e18;  // 10%
-        categoryCaps[AllocationCategory.STRATEGIC_INVESTORS] = 500_000_000 * 1e18;      // 5%
-        categoryCaps[AllocationCategory.INSURANCE_STABILITY] = 500_000_000 * 1e18;      // 5%
-        categoryCaps[AllocationCategory.FOUNDATION_RESERVE] = 500_000_000 * 1e18;       // 5%
+        categoryCaps[AllocationCategory.STRATEGIC_SEED] = 550_000_000 * 1e18;           // 5.5%
+        categoryCaps[AllocationCategory.PUBLIC_SALES] = 750_000_000 * 1e18;             // 7.5%
+        categoryCaps[AllocationCategory.AIRDROP_SEALS] = 700_000_000 * 1e18;            // 7%
+        categoryCaps[AllocationCategory.TREASURY_MM] = 600_000_000 * 1e18;              // 6%
+        categoryCaps[AllocationCategory.INSURANCE_FUND] = 500_000_000 * 1e18;           // 5%
+        categoryCaps[AllocationCategory.CONTINGENCY_RESERVE] = 400_000_000 * 1e18;      // 4%
     }
 
     // =========================================================================
@@ -385,32 +387,32 @@ contract AethelredVesting is
     // =========================================================================
 
     /**
-     * @notice Create a vesting schedule for strategic investors
-     * @dev 12-month cliff, 4-year total vest, no TGE unlock
+     * @notice Create a vesting schedule for strategic/seed investors
+     * @dev 12-month cliff, 36-month total vest (24mo linear), no TGE unlock
      * @param beneficiary Investor address
      * @param amount Total tokens to vest
      */
-    function createStrategicInvestorSchedule(
+    function createStrategicSeedSchedule(
         address beneficiary,
         uint256 amount
     ) external onlyRole(VESTING_ADMIN_ROLE) returns (bytes32) {
         return _createSchedule(
             beneficiary,
             amount,
-            AllocationCategory.STRATEGIC_INVESTORS,
+            AllocationCategory.STRATEGIC_SEED,
             VestingType.CLIFF_LINEAR,
-            365 days,     // 12-month cliff
-            4 * 365 days, // 4 years total
-            0,            // No TGE unlock
-            0,            // No cliff unlock — Audit fix [H-01]
-            false,        // Not revocable
-            true          // Transferable
+            365 days,         // 12-month cliff
+            3 * 365 days,     // 3 years total (12mo cliff + 24mo linear)
+            0,                // No TGE unlock
+            0,                // No cliff unlock
+            false,            // Not revocable
+            true              // Transferable
         );
     }
 
     /**
      * @notice Create a vesting schedule for core contributors
-     * @dev 12-month cliff, 25% at cliff, 4-year total vest
+     * @dev 6-month cliff, 48-month total vest (42mo linear), no TGE unlock
      * @param beneficiary Team member address
      * @param amount Total tokens to vest
      */
@@ -423,34 +425,34 @@ contract AethelredVesting is
             amount,
             AllocationCategory.CORE_CONTRIBUTORS,
             VestingType.CLIFF_LINEAR,
-            365 days,     // 12-month cliff
-            4 * 365 days, // 4 years total
-            0,            // No TGE unlock
-            2500,         // 25% cliff unlock — Audit fix [H-01]
-            true,         // Revocable (for departures)
-            false         // Not transferable
+            182 days,         // 6-month cliff
+            4 * 365 days,     // 4 years total (6mo cliff + 42mo linear)
+            0,                // No TGE unlock
+            0,                // No cliff unlock
+            true,             // Revocable (for departures)
+            false             // Not transferable
         );
     }
 
     /**
-     * @notice Create a public sale schedule
-     * @dev 22.5% TGE unlock, no cliff, 2-year total vest
+     * @notice Create a public sales schedule
+     * @dev 20% TGE unlock, no cliff, 18-month total vest
      * @param beneficiary Recipient address
      * @param amount Total tokens
      */
-    function createPublicSaleSchedule(
+    function createPublicSalesSchedule(
         address beneficiary,
         uint256 amount
     ) external onlyRole(VESTING_ADMIN_ROLE) returns (bytes32) {
         return _createSchedule(
             beneficiary,
             amount,
-            AllocationCategory.PUBLIC_SALE_COMMUNITY,
+            AllocationCategory.PUBLIC_SALES,
             VestingType.CLIFF_LINEAR,
-            0,            // No cliff
-            2 * 365 days, // 2-year total vest
-            2250,         // 22.5% at TGE
-            0,            // No cliff unlock — Audit fix [H-01]
+            0,                    // No cliff
+            547 days,             // 18-month total vest
+            2000,                 // 20% at TGE
+            0,                    // No cliff unlock
             false,
             true
         );
@@ -458,7 +460,7 @@ contract AethelredVesting is
 
     /**
      * @notice Create a custom vesting schedule
-     * @param cliffUnlockBps Percentage released at cliff (BPS) — Audit fix [H-01]
+     * @param cliffUnlockBps Percentage released at cliff (BPS) - Audit fix [H-01]
      */
     function createCustomSchedule(
         address beneficiary,
@@ -518,7 +520,7 @@ contract AethelredVesting is
             revert CategoryCapExceeded();
         }
 
-        // Audit fix [M-04]: Removed block.timestamp from hash — scheduleCount
+        // Audit fix [M-04]: Removed block.timestamp from hash - scheduleCount
         // provides uniqueness and block.timestamp is miner-controllable.
         bytes32 scheduleId = keccak256(
             abi.encode(
@@ -690,7 +692,7 @@ contract AethelredVesting is
         // Calculate TGE unlock
         uint256 tgeAmount = (schedule.totalAmount * schedule.tgeUnlockBps) / BPS_DENOMINATOR;
 
-        // Check cliff — before cliff, only TGE portion is available
+        // Check cliff - before cliff, only TGE portion is available
         uint256 elapsed = endTime - startTime;
         if (elapsed < schedule.cliffDuration) {
             return tgeAmount;
@@ -970,7 +972,7 @@ contract AethelredVesting is
     }
 
     // =========================================================================
-    // VERSION — Audit fix [I-05]
+    // VERSION - Audit fix [I-05]
     // =========================================================================
 
     /// @notice Contract implementation version for upgrade tracking.

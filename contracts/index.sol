@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 /**
  * @title @aethelred/contracts
- * @notice Barrel import — pull in all interfaces with a single import.
+ * @notice Barrel import - pull in all interfaces with a single import.
  *
  * Usage in consumer projects:
  *

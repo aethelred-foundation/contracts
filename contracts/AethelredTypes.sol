@@ -11,7 +11,7 @@ pragma solidity ^0.8.20;
  */
 library AethelredTypes {
     // =====================================================================
-    // Job lifecycle — mirrors x/seal
+    // Job lifecycle - mirrors x/seal
     // =====================================================================
 
     /// @notice The lifecycle of an AI compute job on Aethelred.
@@ -79,7 +79,7 @@ library AethelredTypes {
     }
 
     // =====================================================================
-    // Verification — mirrors x/verify
+    // Verification - mirrors x/verify
     // =====================================================================
 
     /// @notice Verification strategy for a compute job.
@@ -118,7 +118,7 @@ library AethelredTypes {
     }
 
     // =====================================================================
-    // Digital Seal — mirrors x/seal (EnhancedDigitalSeal)
+    // Digital Seal - mirrors x/seal (EnhancedDigitalSeal)
     // =====================================================================
 
     /// @notice Seal lifecycle status.
@@ -158,7 +158,7 @@ library AethelredTypes {
     }
 
     // =====================================================================
-    // Bridge — mirrors contracts/AethelredBridge.sol
+    // Bridge - mirrors contracts/AethelredBridge.sol
     // =====================================================================
 
     /// @notice Status of a cross-chain transfer.

@@ -26,7 +26,7 @@ interface IReserveOracle {
  *         attested reserves beyond a configured threshold.
  * @dev Designed as a drop-in module for single-asset stablecoin contracts.
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-28)
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-28)
  */
 contract SovereignCircuitBreakerModule is ISovereignCircuitBreaker, Ownable {
     uint256 public constant BPS_DENOMINATOR = 10_000;

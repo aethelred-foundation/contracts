@@ -40,7 +40,7 @@ block_coinbase = '0x0000000000000000000000000000000000000000'
 block_timestamp = 1
 block_difficulty = 0
 block_prevrandao = '0x0000000000000000000000000000000000000000000000000000000000000000'
-block_gas_limit = 30000000
+block_gas_limit = 60000000
 memory_limit = 33554432
 
 # Fuzzing settings
@@ -79,7 +79,7 @@ ignore = []
 out = 'docs'
 title = 'Aethelred Bridge Contracts'
 book = 'https://docs.aethelred.org/contracts'
-repository = 'https://github.com/aethelred/aethelred'
+repository = 'https://github.com/AethelredFoundation/contracts'
 ignore = ['test/**', 'script/**']
 
 # RPC endpoints for fork testing

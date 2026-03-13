@@ -133,7 +133,7 @@ contract AethelredBridgeEmergencyTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Emergency Withdrawal Amount Cap
+    // AUDIT REGRESSION - Emergency Withdrawal Amount Cap
     // =========================================================================
 
     function test_Audit_EmergencyWithdrawal_ExceedsMaxReverts() public {
@@ -156,7 +156,7 @@ contract AethelredBridgeEmergencyTest is Test {
     }
 
     // =========================================================================
-    // AUDIT REGRESSION — Emergency Withdrawal Accounting
+    // AUDIT REGRESSION - Emergency Withdrawal Accounting
     // =========================================================================
 
     function test_Audit_EmergencyWithdrawal_UpdatesTotalLockedETH() public {

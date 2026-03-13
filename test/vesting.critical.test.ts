@@ -38,8 +38,8 @@ describe("AethelredVesting (Critical regressions)", function () {
 
     await time.increaseTo(cliffEnd);
     const vestedAtCliff = await vesting.getVested(scheduleId);
-    // At cliff end, 25% cliff unlock is immediately available (cliffUnlockBps=2500)
-    const expectedCliffAmount = (amount * 2500n) / 10000n;
+    // At cliff end, 0% cliff unlock (core contributors no longer have cliff unlock)
+    const expectedCliffAmount = (amount * 0n) / 10000n;
     expect(vestedAtCliff).to.equal(expectedCliffAmount);
 
     await time.increaseTo(cliffEnd + 1);

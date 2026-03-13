@@ -230,7 +230,7 @@ contract AethelredBridge is ReentrancyGuard, Pausable, AccessControl {
         if (amount > tokenMaxAmount[token]) revert AmountAboveMaximum();
         if (msg.value < bridgeFee) revert InsufficientFee();
 
-        // Transfer tokens to bridge — measure actual received for fee-on-transfer tokens
+        // Transfer tokens to bridge - measure actual received for fee-on-transfer tokens
         uint256 balanceBefore = IERC20(token).balanceOf(address(this));
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
         uint256 actualReceived = IERC20(token).balanceOf(address(this)) - balanceBefore;

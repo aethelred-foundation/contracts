@@ -58,7 +58,7 @@ interface IAggregatorV3 {
  * - Joint-signature unpause governance (Issuer + Foundation + Auditor/Custodian)
  * - Chainlink Automation-compatible checkUpkeep/performUpkeep for autonomous PoR
  * @custom:security-contact security@aethelred.io
- * @custom:audit-status Remediated — all 27 findings addressed (2026-02-22)
+ * @custom:audit-status Remediated - all 27 findings addressed (2026-02-22)
  */
 contract InstitutionalStablecoinBridge is
     Initializable,
@@ -1273,7 +1273,7 @@ contract InstitutionalStablecoinBridge is
     {}
 
     // =========================================================================
-    // CHAINLINK AUTOMATION — AUTONOMOUS PoR MONITORING (H-09 hardening)
+    // CHAINLINK AUTOMATION - AUTONOMOUS PoR MONITORING (H-09 hardening)
     // =========================================================================
 
     /**
