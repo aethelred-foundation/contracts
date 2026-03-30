@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
- <a href="https://github.com/AethelredFoundation/contracts/actions/workflows/contracts-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred/contracts/contracts-ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
+ <a href="https://github.com/aethelred-foundation/contracts/actions/workflows/contracts-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred-foundation/contracts/contracts-ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="License"></a>
  <a href="https://docs.aethelred.io/contracts"><img src="https://img.shields.io/badge/docs-contracts-orange?style=flat-square" alt="Docs"></a>
  <img src="https://img.shields.io/badge/audit-in_progress-yellow?style=flat-square" alt="Audit">
@@ -98,4 +98,4 @@ SealVerifier
 
 ## Contributing
 
-See [aethelred/aethelred CONTRIBUTING.md](https://github.com/AethelredFoundation/aethelred/blob/main/CONTRIBUTING.md).
+See [aethelred/aethelred CONTRIBUTING.md](https://github.com/aethelred-foundation/aethelred/blob/main/CONTRIBUTING.md).
