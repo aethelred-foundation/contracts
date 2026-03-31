@@ -7,10 +7,16 @@
 
 <p align="center">
  <a href="https://github.com/aethelred-foundation/contracts/actions/workflows/contracts-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred-foundation/contracts/contracts-ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
+ <a href="https://github.com/aethelred-foundation/contracts/actions/workflows/repo-security-baseline.yml"><img src="https://img.shields.io/github/actions/workflow/status/aethelred-foundation/contracts/repo-security-baseline.yml?branch=main&style=flat-square&label=Security" alt="Security"></a>
  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="License"></a>
  <a href="https://docs.aethelred.io/contracts"><img src="https://img.shields.io/badge/docs-contracts-orange?style=flat-square" alt="Docs"></a>
  <img src="https://img.shields.io/badge/audit-in_progress-yellow?style=flat-square" alt="Audit">
- <img src="https://img.shields.io/badge/solidity-^0.8.20-purple?style=flat-square" alt="Solidity">
+</p>
+<p align="center">
+ <img src="https://img.shields.io/badge/Solidity-^0.8.20-363636?style=flat-square&logo=solidity&logoColor=white" alt="Solidity">
+ <img src="https://img.shields.io/badge/Hardhat-2.28-FFF100?style=flat-square&logo=hardhat&logoColor=black" alt="Hardhat">
+ <img src="https://img.shields.io/badge/Foundry-stable-363636?style=flat-square" alt="Foundry">
+ <img src="https://img.shields.io/badge/OpenZeppelin-5.x-4E5EE4?style=flat-square" alt="OpenZeppelin">
 </p>
 
 ---
