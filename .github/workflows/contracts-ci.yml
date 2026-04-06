@@ -8,6 +8,9 @@ on:
     branches: [main]
     paths: ["contracts/**", "hardhat.config.ts"]
 
+permissions:
+  contents: read
+
 jobs:
   hardhat:
     name: Hardhat Compile & Test
